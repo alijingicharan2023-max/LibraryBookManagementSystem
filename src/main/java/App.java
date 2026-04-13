@@ -1,26 +1,65 @@
-public class App {
+import java.util.*;
 
-    public String registerUser(String username, String email, String password) {
+class Book {
+    int id;
+    String title;
+    boolean isAvailable;
 
-        if (username == null || username.isEmpty()) {
-            return "Username cannot be empty";
-        }
+    Book(int id, String title) {
+        this.id = id;
+        this.title = title;
+        this.isAvailable = true;
+    }
+}
 
-        if (email == null || !email.contains("@")) {
-            return "Invalid email format";
-        }
+class Library {
+    List<Book> books = new ArrayList<>();
 
-        if (password == null || password.length() < 6) {
-            return "Password must be at least 6 characters";
-        }
-
-        return "User registered successfully";
+    void addBook(int id, String title) {
+        books.add(new Book(id, title));
     }
 
-    public static void main(String[] args) {
-        App app = new App();
+    void listBooks() {
+        for (Book b : books) {
+            System.out.println(b.id + " - " + b.title + " - " +
+                (b.isAvailable ? "Available" : "Lent"));
+        }
+    }
 
-        String result = app.registerUser("Charan", "charan@gmail.com", "123456");
-        System.out.println(result);
+    boolean lendBook(int id) {
+        for (Book b : books) {
+            if (b.id == id && b.isAvailable) {
+                b.isAvailable = false;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean returnBook(int id) {
+        for (Book b : books) {
+            if (b.id == id && !b.isAvailable) {
+                b.isAvailable = true;
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+public class App {
+    public static void main(String[] args) {
+        Library lib = new Library();
+
+        lib.addBook(1, "Java");
+        lib.addBook(2, "Python");
+
+        System.out.println("Before Lending:");
+        lib.listBooks();
+
+        lib.lendBook(1);
+
+        System.out.println("\nAfter Lending:");
+        lib.listBooks();
     }
 }
